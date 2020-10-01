@@ -1,0 +1,152 @@
+#include<stdio.h>
+#pragma warning(disable:4996)
+
+struct stu
+{
+	int L, R;
+}a[200002];
+
+int main()
+{
+	int N, M, K, L;
+	int i,k,s,p,q,r,head,end;
+	scanf("%d%d%d%d", &N, &M, &K, &L);
+	for (i = 0; i < N + M + K + L; i++)
+	{
+		scanf("%d", &k);
+		switch (k)
+		{
+		case 1:
+		{
+			scanf("%d%d%d", &s, &p, &q);
+			if (p == -1)
+			{
+				a[s].L = 0;
+				a[s].R = 0;
+				head = s;
+				end = s;
+			}
+			else if (q == 0)
+			{
+				if (p == head)
+				{
+					a[p].L = s;
+					a[s].R = p;
+					a[s].L = 0;
+					head = s;
+				}
+				else {
+					a[a[p].L].R = s;
+					a[s].L = a[p].L;
+					a[s].R = p;
+					a[p].L = s;
+				}
+			}
+			else if (q == 1)
+			{
+				if (end == p)
+				{
+					a[p].R = s;
+					a[s].L = p;
+					a[s].R = 0;
+					end = s;
+				}
+				else {
+					a[a[p].R].L = s;
+					a[s].R = a[p].R;
+					a[s].L = p;
+					a[p].R = s;
+
+				}
+			}
+		}break;
+		case 0:
+		{
+			scanf("%d", &s);
+			if (head == s&&end!=s)
+			{
+				head = a[s].R;
+				a[a[s].R].L = 0;
+				a[s].R = a[s].L = 0;
+			}
+			else if (end == s&&head!=s)
+			{
+				end = a[s].L;
+				a[a[s].L].R = 0;
+				a[s].R = a[s].L = 0;
+			}
+			else if (head != s && end != s)
+			{
+				a[a[s].L].R = a[s].R;
+				a[a[s].R].L = a[s].L;
+				a[s].L = a[s].R = 0;
+			}
+			else
+			{}
+		}break;
+		case -1:
+		{
+			scanf("%d%d", &p, &q);
+			if (p == head) head=q;
+			else if (q == head) head=p;
+			else if (p == end)  end=q;
+			else if (q == end)  end=p;
+			if (a[p].R != q && a[p].L != q)
+			{
+				r = a[p].L;
+				s = a[p].R;
+				a[p].L = a[q].L;
+				a[p].R = a[q].R;
+				a[q].L = r;
+				a[q].R = s;
+				a[a[q].L].R = q;
+				a[a[q].R].L = q;
+				a[a[p].L].R = p;
+				a[a[p].R].L = p;
+			}
+			else if (a[p].L == q)
+			{
+				a[a[q].L].R = p;
+				a[a[p].R].L = q;
+				a[q].R = a[p].R;
+				a[p].L = a[q].L;
+				a[q].L = p;
+				a[p].R = q;
+			}
+			else if (a[p].R == q)
+			{
+				a[a[q].R].L = p;
+				a[a[p].L].R = q;
+				a[q].L = a[p].L;
+				a[p].R = a[p].R;
+				a[q].R = p;
+				a[p].L = q;
+				
+			}
+		}break;
+		case -2:
+		{
+
+			for (p = 1; p <=N;p++)
+			{
+				p = a[p].R;
+				r = a[p].L;
+				a[p].L = a[p].R;		
+			}
+			r = head;
+			head = end;
+			end = r;
+		}break;
+		}
+		a[0].L = a[0].R = a[200001].L = a[200001].R = 0;
+	}
+	printf("%d", head);
+	r = a[head].R;
+	for (i = 1; i < N - M; i++)
+	{
+		printf(" %d", r);
+		r = a[r].R;
+	}
+	printf(" -1");
+	return 0;
+}
